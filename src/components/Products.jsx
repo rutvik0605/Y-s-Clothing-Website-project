@@ -1,30 +1,46 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Product360 from "./Product360"
 import { useCart } from "./CartContext"
+import { fetchProducts } from "../api"
 
-const hoodies = [
+// Fallback hardcoded data (used when backend is offline)
+const fallbackHoodies = [
   { name: "RUTVIK Edition Hoodie", price: "₹3000", image: "/images/hoodie1.jpg", images: ["/images/hoodie1.jpg"] },
   { name: "RUTHLESS Hoodie", price: "₹3000", image: "/images/hoodie2.jpg", images: ["/images/hoodie2.jpg"] },
   { name: "RESTLESS Hoodie", price: "₹3000", image: "/images/hoodie3.jpg", images: ["/images/hoodie3.jpg"] }
 ]
-
-const tees = [
+const fallbackTees = [
   { name: "Street Black Tee", price: "₹1000", image: "/images/tee1.jpg", images: ["/images/tee1.jpg"] },
   { name: "Urban Oversized Tee", price: "₹1000", image: "/images/tee2.jpg", images: ["/images/tee2.jpg"] },
   { name: "Graphic Tee", price: "₹1000", image: "/images/tee3.jpg", images: ["/images/tee3.jpg"] }
 ]
-
-const puffers = [
+const fallbackPuffers = [
   { name: "Midnight Puffer", price: "₹4500", image: "/images/puffer1.jpg", images: ["/images/puffer1.jpg"] },
   { name: "Urban Puffer", price: "₹4800", image: "/images/puffer2.jpg", images: ["/images/puffer2.jpg"] },
   { name: "Storm Puffer", price: "₹5000", image: "/images/puffer3.jpg", images: ["/images/puffer3.jpg"] },
   { name: "Arctic Puffer", price: "₹5200", image: "/images/puffer4.jpg", images: ["/images/puffer4.jpg"] }
 ]
 
-function Section({ title, bg, items }) {
+function Section({ title, bg, category, fallback }) {
+  const [items, setItems] = useState(fallback)
   const [selected, setSelected] = useState(null)
   const [size, setSize] = useState(null)
   const { addToCart } = useCart()
+
+  useEffect(() => {
+    fetchProducts(category).then(data => {
+      if (data && data.length > 0) {
+        // Format DB data to match component structure
+        const formatted = data.map(p => ({
+          ...p,
+          price: `₹${p.price}`,
+          images: [p.image]
+        }))
+        setItems(formatted)
+      }
+      // If no DB data, fallback stays
+    })
+  }, [category])
 
   const handleAddToCart = () => {
     if (!size) { alert("Please select a size!"); return }
@@ -69,9 +85,9 @@ function Section({ title, bg, items }) {
 function Products() {
   return (
     <>
-      <Section title="Oversized Premium T-Shirts" bg="beige" items={tees} />
-      <Section title="Winter Puffer Jackets"      bg="blue"  items={puffers} />
-      <Section title="450 GSM Premium Hoodies"   bg="beige" items={hoodies} />
+      <Section title="Oversized Premium T-Shirts" bg="beige" category="tees"    fallback={fallbackTees} />
+      <Section title="Winter Puffer Jackets"      bg="blue"  category="puffers" fallback={fallbackPuffers} />
+      <Section title="450 GSM Premium Hoodies"   bg="beige" category="hoodies" fallback={fallbackHoodies} />
     </>
   )
 }
