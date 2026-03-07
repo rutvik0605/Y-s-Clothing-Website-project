@@ -76,7 +76,7 @@ cd backend
 npm install
 node server.js
 ```
-API runs at `http://localhost:5000`
+API runs at `https://y-s-clothing-website-project.onrender.com`
 
 ---
 
@@ -100,7 +100,7 @@ PORT=5000
 
 ### Frontend (`.env.local`)
 ```env
-VITE_API_URL=http://localhost:5000
+VITE_API_URL=http://localhost:5https://y-s-clothing-website-project.onrender.com
 ```
 
 ---
