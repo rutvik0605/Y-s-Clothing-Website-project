@@ -6,13 +6,39 @@ function Cart() {
   const [ordered, setOrdered] = useState(false)
   const [form, setForm] = useState({ name: "", phone: "", address: "" })
 
-  const handleOrder = () => {
-    if (!form.name || !form.phone || !form.address) {
-      alert("Please fill all fields!")
-      return
-    }
-    setOrdered(true)
+ const handleOrder = async () => {
+  if (!form.name || !form.phone || !form.address) {
+    alert("Please fill all fields!")
+    return
   }
+
+  try {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/orders`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        customer: form,
+        items: cartItems,
+        total: total,
+        paymentMethod: "COD"
+      })
+    })
+
+    const data = await res.json()
+
+    if (data.success) {
+      setOrdered(true)
+    } else {
+      alert("Order failed")
+    }
+
+  } catch (err) {
+    console.error(err)
+    alert("Server error placing order")
+  }
+}
 
   return (
     <>

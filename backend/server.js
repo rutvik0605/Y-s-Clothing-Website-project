@@ -3,6 +3,7 @@ import mongoose from "mongoose"
 import dotenv from "dotenv"
 import cors from "cors"
 import productRoutes from "./routes/products.js"
+import orderRoutes from "./routes/orders.js"
 
 dotenv.config()
 
@@ -13,6 +14,7 @@ app.use(express.json())
 
 // Routes
 app.use("/api/products", productRoutes)
+app.use("/api/orders", orderRoutes)
 
 app.get("/", (req, res) => {
   res.send("API running ✅")
