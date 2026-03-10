@@ -15,7 +15,7 @@ A full-stack streetwear e-commerce website built with React, Node.js, and MongoD
 | Backend | Node.js + Express |
 | Database | MongoDB Atlas |
 | Frontend Hosting | Netlify |
-| Backend Hosting | Render (coming soon) |
+| Backend Hosting | Render  |
 
 ---
 
